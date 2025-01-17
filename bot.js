@@ -1,10 +1,30 @@
-const { Bot } = require('grammy');
+const { Bot, InlineKeyboard } = require('grammy');
 
 const bot = new Bot('7707427846:AAGlk1n3_Yd-uYeVVsGR0a-6SF7HUrTIJ_g');
 
 bot.command('start', (ctx) => {
-    ctx.reply('Привет!  напиши /help, чтобы ботика на веранде оес!!');
+    const keyboard = new InlineKeyboard
+        .text('1', 'var1')
+        .text('2', 'var2')
+        .row()
+        .text('помогите', 'help');
+        ctx.reply('Привет!  напиши /help, чтобы ботика на веранде оес!! есои прост на кнопки надо пожмякать, вперед',{reply_markup: keyboard});
 });
+
+bot.on('callback_query:data', (ctx) => {
+    const data = ctx.callbackQuery.data;
+
+    if (data === 'var1'){
+        ctx.answerCallbackQuery('Неправильный вариант...');
+        ctx.react('лучше выберите другой.');
+    }else  if (data === 'var2'){
+        ctx.answerCallbackQuery('верно!!! с нас 5к в подарок');
+        ctx.react('лучше выберите другой.');
+    }else if (data === 'help'){
+        ctx.answerCallbackQuery('вам особо не помочь');
+        ctx.react('помощь только через /help.');
+    }
+})
 
 bot.command('help', (ctx) => {
     ctx.reply('/start - привет\n/help - помосчь\n/echo - повторить сообщение\n/jonk - спой песню');
