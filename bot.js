@@ -3,7 +3,7 @@ const { Bot, InlineKeyboard } = require('grammy');
 const bot = new Bot('7707427846:AAGlk1n3_Yd-uYeVVsGR0a-6SF7HUrTIJ_g');
 
 bot.command('start', (ctx) => {
-    const keyboard = new InlineKeyboard
+    const keyboard = new InlineKeyboard()
         .text('1', 'var1')
         .text('2', 'var2')
         .row()
@@ -16,13 +16,13 @@ bot.on('callback_query:data', (ctx) => {
 
     if (data === 'var1'){
         ctx.answerCallbackQuery('Неправильный вариант...');
-        ctx.react('лучше выберите другой.');
+        ctx.reply('лучше выберите другой.');
     }else  if (data === 'var2'){
         ctx.answerCallbackQuery('верно!!! с нас 5к в подарок');
-        ctx.react('лучше выберите другой.');
+        ctx.reply('лучше выберите другой.');
     }else if (data === 'help'){
         ctx.answerCallbackQuery('вам особо не помочь');
-        ctx.react('помощь только через /help.');
+        ctx.reply('помощь только через /help.');
     }
 })
 
