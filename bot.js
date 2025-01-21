@@ -17,31 +17,29 @@ bot.on('callback_query:data', async (ctx) => {
 
     if (data === 'var1') {
         ctx.answerCallbackQuery('Тут 50/50...');
-
         const game1Keyboard = new InlineKeyboard()
             .text('Орел', 'earl')
             .text('Решка', 'reshka');
-
         ctx.reply('Выберите Орел или Решка', { reply_markup: game1Keyboard });
     } else if (data === 'earl' || data === 'reshka') {
         await playCoinTossGame(ctx, data);  
     } else if (data === 'var2') {
         ctx.answerCallbackQuery('Тут 33%...');
-
         const game2Keyboard = new InlineKeyboard()
             .text('Камен', 'petr')
             .text('Ножны', 'scissors')
             .text('Бугага', 'paper');
-
-            ctx.reply('Выберите Камен, Ножны или Бугага', { reply_markup: game2Keyboard });
-    }  else if (data === 'petr' || data === 'scissors' || data === 'paper') {
+        ctx.reply('Выберите Камен, Ножны или Бугага', { reply_markup: game2Keyboard });
+    } else if (data === 'petr' || data === 'scissors' || data === 'paper') {
         await playKMNGame(ctx, data);  
-    }else if (data === 'help') {
+    } else if (data === 'var3') {
+        ctx.answerCallbackQuery('Начинаем игру угадай число!');
+        await startGuessNumberGame(ctx);
+    } else if (data === 'help') {
         ctx.answerCallbackQuery('уже нечем помочь');
         ctx.reply('нажми /help.');
     }
 });
-
 
 bot.command('help', (ctx) => {
     ctx.reply('/start - привет\n/help - помощь\n/echo - повторить сообщение\n/jonk - спой песню');
@@ -96,5 +94,41 @@ async function playKMNGame(ctx, userChoice) {
 
     await ctx.reply(outcomeMessage);
 }
+
+async function startGuessNumberGame(ctx) {
+    // Сохраняем состояние игры
+    const targetNumber = Math.floor(Math.random() * 100) + 1; // Загаданное число
+    let attempts = 0;
+
+    // Вспомогательная функция для обработки ввода пользователя
+    const handleGuess = async (ctx) => {
+        attempts++;
+        const userInput = parseInt(ctx.message.text);
+
+        if (isNaN(userInput) || userInput < 1 || userInput > 100) {
+            return ctx.reply('Пожалуйста, введите число от 1 до 100.');
+        }
+
+        if (userInput === targetNumber) {
+            await ctx.reply(`Поздравляю! Вы угадали число ${targetNumber} за ${attempts} попыток!`);
+            return; // Игра окончена
+        } else if (userInput < targetNumber) {
+            await ctx.reply('Мое число больше! Попробуйте снова.');
+        } else {
+            await ctx.reply('Мое число меньше! Попробуйте снова.');
+        }
+    };
+
+    // Начинаем игру
+    await ctx.reply('Я загадал число от 1 до 100. Попробуйте угадать!');
+
+    // Обрабатываем ответы пользователя в рамках этой игры
+    bot.on('message:text', (ctx) => {
+        if (ctx.message.text !== '/start' && ctx.message.text !== '/help') {
+            handleGuess(ctx);
+        }
+    });
+}
+
 bot.start();
 console.log('Bot started.');
