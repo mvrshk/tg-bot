@@ -58,7 +58,7 @@ bot.command('echo', (ctx) => {
 });
 
 bot.command('markdown', (ctx) => {
-    ctx.reply(`Вот пример **жирного текста** и __курсива__.`);
+    ctx.reply('Вот пример *жирного текста* , _курсива_ и `монотекста`', { parse_mode: 'MarkdownV2' });
 });
 
 bot.command('html', (ctx) => {
