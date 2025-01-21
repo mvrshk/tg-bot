@@ -1,4 +1,7 @@
+
 const { Bot, InlineKeyboard } = require('grammy');
+const help = require('./commands/help');
+const helpCommand = require('./commands/help');
 
 const bot = new Bot('7707427846:AAGlk1n3_Yd-uYeVVsGR0a-6SF7HUrTIJ_g');
 
@@ -48,9 +51,7 @@ bot.on('callback_query:data', async (ctx) => {
 });
 
 
-bot.command('help', (ctx) => {
-    ctx.reply('/start - привет\n/help - помощь\n/echo - повторить сообщение\n/jonk - спой песню');
-});
+bot.command('help', helpCommand);
 
 bot.command('echo', (ctx) => {
     const message = ctx.message.text.split(' ').slice(1).join(' ');
@@ -120,7 +121,6 @@ bot.on('message:text', async (ctx) => {
     if (ctx.message.text === '/start' || ctx.message.text === '/help') {
         return; 
     }
-
     if (currentGame[ctx.from.id]) {
         const { targetNumber, attempts } = currentGame[ctx.from.id];
         const userGuess = parseInt(ctx.message.text);
